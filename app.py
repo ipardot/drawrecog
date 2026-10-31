@@ -35,26 +35,41 @@ st.subheader("Dibuja el boceto en el panel  y presiona el botón para analizarla
 # Add canvas component
 #bg_image = st.sidebar.file_uploader("Cargar Imagen:", type=["png", "jpg"])
 # Specify canvas parameters in application
-drawing_mode = "freedraw"
-stroke_width = st.sidebar.slider('Selecciona el ancho de línea', 1, 30, 5)
-#stroke_color = '#FFFFFF' # Set background color to white
-#bg_color = '#000000'
-stroke_color = "#000000" 
-bg_color = '#FFFFFF'
-#realtime_update = st.sidebar.checkbox("Update in realtime", True)
+with st.sidebar:
+    st.subheader("Propiedades del Tablero")
+
+    # Canvas dimensions (moved to the top)
+    st.subheader("Dimensiones del Tablero")
+    canvas_width = st.slider("Ancho del tablero", 300, 700, 500, 50)
+    canvas_height = st.slider("Alto del tablero", 200, 600, 300, 50)
+
+    # Drawing mode selector
+    drawing_mode = st.selectbox(
+        "Herramienta de Dibujo:",
+        ("freedraw", "line", "rect", "circle", "transform", "polygon", "point"),
+    )
+
+    # Stroke width slider
+    stroke_width = st.slider('Selecciona el ancho de línea', 1, 30, 15)
+
+    # Stroke color picker
+    stroke_color = st.color_picker("Color de trazo", "#FFFFFF")
+
+    # Background color
+    bg_color = st.color_picker("Color de fondo", "#000000")
 
 
-# Create a canvas component
+# Create a canvas component with dynamic key
 canvas_result = st_canvas(
     fill_color="rgba(255, 165, 0, 0.3)",  # Fixed fill color with some opacity
     stroke_width=stroke_width,
     stroke_color=stroke_color,
     background_color=bg_color,
-    height=300,
-    width=400,
+    height=canvas_height,
+    width=canvas_width,
     #background_image= None #Image.open(bg_image) if bg_image else None,
     drawing_mode=drawing_mode,
-    key="canvas",
+    key=f"canvas_{canvas_width}_{canvas_height}",  # Dynamic key based on dimensions
 )
 
 ke = st.text_input('Ingresa tu Clave')
